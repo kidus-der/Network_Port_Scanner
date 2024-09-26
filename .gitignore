@@ -16,6 +16,12 @@ Thumbs.db
 # Ignore log files
 *.log
 
+# Ignore text files from logging scan results
+*.txt
+
+# Ignore logs folder containing scan logs from testing
+logs/
+
 # Ignore compiled C extensions
 *.so
 

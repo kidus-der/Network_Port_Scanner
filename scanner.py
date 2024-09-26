@@ -5,6 +5,7 @@ from banner_grabber import grab_banner
 from service_detector import get_service
 from concurrent.futures import ThreadPoolExecutor
 from utils import parse_ip_addresses
+from logger import save_scan_results
 
 
 results = []
@@ -45,6 +46,10 @@ def scan_all_ports(ip_list, max_threads=100):
     """
     Scan all ports for the given IP address and display results.
     """
+
+    global results
+    results = []  # reset results list
+
     print(f"Starting scan on IP addresses: {', '.join(ip_list)}")
     start_time = datetime.now()
 
@@ -63,8 +68,12 @@ def scan_all_ports(ip_list, max_threads=100):
         for future in ip_futures:
             future.result()
 
+    #display time taken to scan all IP addresses
     end_time = datetime.now()
     print(f"Scanning completed in: {end_time - start_time}")
+
+    # save scan results to a log file
+    log_file = save_scan_results(results)
     
     # print all results
     print("\nScan Results:")
