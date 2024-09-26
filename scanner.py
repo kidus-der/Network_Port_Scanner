@@ -21,11 +21,11 @@ def scan_port(ip, port):
             service = get_service(port)  # get the service name
             banner = grab_banner(ip, port)  # try to grab the banner of a port
             with lock:
-                results.append({"port": port, "status": "Open", "service": service, "banner": banner})
+                results.append({"ip": ip, "port": port, "status": "Open", "service": service, "banner": banner})
         sock.close()
     except:
         with lock:
-            results.append({"port": port, "status": "Closed"})
+            results.append({"ip": ip, "port": port, "status": "Closed"})
 
 
 def scan_ports(ip, start_port, end_port):
@@ -43,21 +43,23 @@ def scan_ports(ip, start_port, end_port):
         thread.join()
 
 
-def scan_all_ports(ip):
+def scan_all_ports(ip_list):
     """
     Scan all ports for the given IP address and display results.
     """
-    print(f"Starting scan on {ip}")
+    print(f"Starting scan on IP addresses: {', '.join(ip_list)}")
     start_time = datetime.now()
 
     # scan ports in chunks for better performance
     max_port = 65535
     chunk_size = 1000
 
-    for i in range(1, max_port, chunk_size):
-        end_port = min(i + chunk_size - 1, max_port)
-        print(f"Scanning ports {i} to {end_port}...")
-        scan_ports(ip, i, end_port)
+    for ip in ip_list:
+        print(f"Scanning IP: {ip}")
+        for i in range(1, max_port, chunk_size):
+            end_port = min(i + chunk_size - 1, max_port)
+            print(f"  Scanning ports {i} to {end_port}...")
+            scan_ports(ip, i, end_port)
 
     end_time = datetime.now()
     print(f"Scanning completed in: {end_time - start_time}")
@@ -66,7 +68,7 @@ def scan_all_ports(ip):
     print("\nScan Results:")
     for result in results:
         if result["status"] == "Open":
-            print(f"Port {result['port']}:\t{result['status']} ({result['service']})")
+            print(f"IP: {result['ip']} | Port {result['port']}:\t{result['status']} ({result['service']})")
             print(f"  Banner: {result['banner']}")
         else:
-            print(f"Port {result['port']}:\t{result['status']}")
+            print(f"IP: {result['ip']} | Port {result['port']}:\t{result['status']}")
