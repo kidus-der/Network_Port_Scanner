@@ -15,7 +15,7 @@ def main():
     print(f"Starting scan on IP(s): {', '.join(target_ips)}")
     
     # start scanning process
-    scan_all_ports(target_ips)
+    scan_all_ports(target_ips, max_threads=200)
 
 if __name__ == "__main__":
     main()
