@@ -15,6 +15,7 @@ To use this port scanner, you need to have Python 3 installed on your system alo
 
 ```bash
 pip install scapy
+```
 
 ## Usage
 
