@@ -21,29 +21,31 @@ pip install scapy
 
 To run the port scanner, use the following command structure:
 
+```bash
 python3 port_scanner.py --ip <IP_ADDRESS> --start-port <START_PORT> --end-port <END_PORT> [--scan-type <SCAN_TYPE>] [--threads <NUMBER_OF_THREADS>] [--save]
+```
 
 ## Arguments
 
---ip: Specify one or more IP addresses to scan.
---start-port: Starting port number to scan (default is 1).
---end-port: Ending port number to scan (default is 1000).
---scan-type: Choose between different scan types, currently supporting:
-    default: A basic TCP connect scan (default behavior).
-    syn: A SYN scan (requires sudo permissions).
---threads: Number of threads to use for scanning (default is 100).
---save: Save the scan results to a log file.
+ - --ip: Specify one or more IP addresses to scan.
+ - --start-port: Starting port number to scan (default is 1).
+ - --end-port: Ending port number to scan (default is 1000).
+ - --scan-type: Choose between different scan types, currently supporting:
+    - default: A basic TCP connect scan (default behavior).
+    - syn: A SYN scan (requires sudo permissions).
+ - --threads: Number of threads to use for scanning (default is 100).
+ - --save: Save the scan results to a log file.
 
 ## Example Commands
 1) Basic TCP Connect Scan:
-
+```bash
 python3 port_scanner.py --ip 127.0.0.1 --start-port 1 --end-port 15
-
+```
 
 2) SYN Scan (requires sudo):
-
+```bash
 sudo python3 port_scanner.py --ip 127.0.0.1 --start-port 1 --end-port 15 --scan-type syn
-
+```
 
 ## Notes for Documentation
 
