@@ -42,40 +42,39 @@ def scan_ports(ip, start_port, end_port, max_threads=100):
             future.result()  # check threads for completion
 
 
-def scan_all_ports(ip_list, max_threads=100):
-    """
-    Scan all ports for the given IP address and display results.
-    """
-
+def scan_all_ports(ip_list, start_port=1, end_port=1000, max_threads=100, save_results=False):
+    '''
+    Scans a range of ports on a list of IP addresses using multithreading.
+    Parameters:
+    ip_list (list): List of IP addresses to scan.
+    start_port (int, optional): Starting port number for the scan. Defaults to 1.
+    end_port (int, optional): Ending port number for the scan. Defaults to 1000.
+    max_threads (int, optional): Maximum number of threads to use for scanning ports. Defaults to 100.
+    save_results (bool, optional): Whether to save the scan results to a file. Defaults to False.
+    '''
     global results
-    results = []  # reset results list
+    results = []  # reset results for each scan
 
     print(f"Starting scan on IP addresses: {', '.join(ip_list)}")
     start_time = datetime.now()
 
-    # scan ports in chunks for better performance
-    max_port = 65535
-    chunk_size = 1000
-
-    # threadpool for concurrent scanning of IP addresses
     with ThreadPoolExecutor(max_workers=len(ip_list)) as ip_executor:
         ip_futures = []
         for ip in ip_list:
             print(f"Starting scan on IP: {ip}")
-            ip_futures.append(ip_executor.submit(scan_ip_ports, ip, chunk_size, max_threads))
+            ip_futures.append(ip_executor.submit(scan_ip_ports, ip, start_port, end_port, max_threads))
 
-        # wait for all IP scanning threads to complete jobs
         for future in ip_futures:
             future.result()
 
-    #display time taken to scan all IP addresses
     end_time = datetime.now()
     print(f"Scanning completed in: {end_time - start_time}")
 
-    # save scan results to a log file
-    log_file = save_scan_results(results)
-    
-    # print all results
+    # Save results if the save option is enabled
+    if save_results:
+        log_file = save_scan_results(results)
+
+    # Print all results
     print("\nScan Results:")
     for result in results:
         if result["status"] == "Open":
@@ -84,13 +83,8 @@ def scan_all_ports(ip_list, max_threads=100):
         else:
             print(f"IP: {result['ip']} | Port {result['port']}:\t{result['status']}")
 
-
-def scan_ip_ports(ip, chunk_size, max_threads):
-    """
-    Scan all ports for a single IP address using multithreading for chunks of ports.
-    """
-    max_port = 65535
-    for i in range(1, max_port, chunk_size):
-        end_port = min(i + chunk_size - 1, max_port)
-        print(f"  Scanning {ip} ports {i} to {end_port}...")
-        scan_ports(ip, i, end_port, max_threads)
+def scan_ip_ports(ip, start_port, end_port, max_threads):
+    for i in range(start_port, end_port + 1, 1000):
+        end_port_chunk = min(i + 999, end_port)
+        print(f"  Scanning {ip} ports {i} to {end_port_chunk}...")
+        scan_ports(ip, i, end_port_chunk, max_threads)
