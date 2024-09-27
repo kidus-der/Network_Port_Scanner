@@ -55,13 +55,13 @@ def scan_all_ports(ip_list, start_port=1, end_port=1000, max_threads=100, save_r
     global results
     results = []  # reset results for each scan
 
-    print(f"Starting scan on IP addresses: {', '.join(ip_list)}")
+    #print(f"Starting scan on IP addresses: {', '.join(ip_list)}")
     start_time = datetime.now()
 
     with ThreadPoolExecutor(max_workers=len(ip_list)) as ip_executor:
         ip_futures = []
         for ip in ip_list:
-            print(f"Starting scan on IP: {ip}")
+            #print(f"Starting scan on IP: {ip}")
             ip_futures.append(ip_executor.submit(scan_ip_ports, ip, start_port, end_port, max_threads))
 
         for future in ip_futures:
@@ -86,5 +86,5 @@ def scan_all_ports(ip_list, start_port=1, end_port=1000, max_threads=100, save_r
 def scan_ip_ports(ip, start_port, end_port, max_threads):
     for i in range(start_port, end_port + 1, 1000):
         end_port_chunk = min(i + 999, end_port)
-        print(f"  Scanning {ip} ports {i} to {end_port_chunk}...")
+        print(f"  Scanning {ip}: ports {i} to {end_port_chunk}...")
         scan_ports(ip, i, end_port_chunk, max_threads)

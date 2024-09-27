@@ -15,7 +15,5 @@ def parse_arguments():
     # for the user
     parser.add_argument("-t", "--threads", type=int, default=100, help="Number of threads to use for scanning.")
     parser.add_argument("-s", "--save", action="store_true", help="Save the scan results to a file.")
-    parser.add_argument("-m", "--multiple", action="store_true", help="Specify multiple IP addresses to scan concurrently.")
-
-    # parse through the arguments and return
+    
     return parser.parse_args()
